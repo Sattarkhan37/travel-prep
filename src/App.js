@@ -6,11 +6,15 @@ const initialItems = [
   { id: 3, description: "charger", quantity: 2, packed: true },
 ];
 export default function App() {
+    const [items, setItems] = useState([]);
+      function handelAddItems(item) {
+    setItems((items) => [...items, item]);
+  }
   return (
     <div className="app">
       <Logo />
-      <Form />
-      <PackingList />
+      <Form onAddItems = {handelAddItems}/>
+      <PackingList items ={items} />
       <Starts />
     </div>
   );
@@ -18,14 +22,18 @@ export default function App() {
 function Logo() {
   return <h1>🌴🌴 Far Away 💼💼</h1>;
 }
-function Form() {
+function Form({onAddItems}) {
   const [description, setdecripction] = useState("");
   const [quantity, setquantity] = useState(1);
+  
+
+
   function handelSubmit(e) {
     e.preventDefault();
     if (!description) return;
     const newItem = { description, quantity, packed: false, id: Date.now() };
     console.log(newItem);
+    onAddItems(newItem);
     setdecripction("");
     setquantity("");
   }
@@ -50,11 +58,11 @@ function Form() {
     </form>
   );
 }
-function PackingList() {
+function PackingList({items}) {
   return (
     <div className="list">
       <ul>
-        {initialItems.map((item) => (
+        {items.map((item) => (
           <Item item={item} key={item.id} />
         ))}
       </ul>
