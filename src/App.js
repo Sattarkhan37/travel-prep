@@ -29,7 +29,7 @@ export default function App() {
         onDeleteItem={handelDeleteItem}
         onToggleItem={handelToggleItem}
       />
-      <Starts />
+      <Starts items={items} />
     </div>
   );
 }
@@ -70,7 +70,7 @@ function Form({ onAddItems }) {
     </form>
   );
 }
-function PackingList({ items, onDeleteItem,onToggleItem }) {
+function PackingList({ items, onDeleteItem, onToggleItem }) {
   return (
     <div className="list">
       <ul>
@@ -86,10 +86,14 @@ function PackingList({ items, onDeleteItem,onToggleItem }) {
     </div>
   );
 }
-function Item({ item, onDeleteItem,onToggleItem }) {
+function Item({ item, onDeleteItem, onToggleItem }) {
   return (
     <li>
-      <input type="checkbox" value={item.packed} onChange={() => onToggleItem(item.id)} />
+      <input
+        type="checkbox"
+        value={item.packed}
+        onChange={() => onToggleItem(item.id)}
+      />
       <span style={item.packed ? { textDecoration: "line-through" } : {}}>
         {item.quantity} {item.description}
       </span>
@@ -97,10 +101,25 @@ function Item({ item, onDeleteItem,onToggleItem }) {
     </li>
   );
 }
-function Starts() {
+function Starts({ items }) {
+  if (!items.length)
+    return (
+      <p className="stats">
+        <em>Start adding some items to your packing list</em>
+      </p>
+    );
+  const numItems = items.length;
+  const numPacked = items.filter((item) => item.packed).length;
+  const percentage =
+    numItems === 0 ? 0 : Math.round((numPacked / numItems) * 100);
   return (
     <footer className="stats">
-      <em> 💼💼Your have X item on Your list ,and you already packed X</em>
+      <em>
+        {percentage === 100
+          ? "You got everything to go"
+          : `💼💼Your have ${numItems} item on Your list ,and you already packed
+        ${numPacked}(${percentage}%)`}
+      </em>
     </footer>
   );
 }
